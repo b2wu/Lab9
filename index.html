@@ -55,18 +55,75 @@
     <button>Trigger a Global Error</button>
   </section>
 
+
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
   <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "96116a53bf274d2ba35c7976191a55f2"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
+                        
+
+  <script>
+
+
+    class ValidationError extends Error {
+      constructor(message) {
+        super(message); // (1)
+        this.name = "ValidationError"; // (2)
+      }
+    }
+
+
     let calculateBtn = document.querySelector('#calculate');
     calculateBtn.addEventListener('click', () => {
       let output = document.querySelector('output');
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
+      if(operator == '/' && secondNum == 0) throw new ValidationError("this is the error happened  secondNum == 0");
       output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+    console.log('errorBtns', errorBtns)
     // TODO - Make buttons functional
+    errorBtns[0].addEventListener('click',()=>{
+      console.log('Console Log Demo')
+    })
+    errorBtns[1].addEventListener('click',()=>{
+      console.error('Console Error Demo')
+    })
+    errorBtns[2].addEventListener('click',(e)=>{
+      console.dir(e)
+    })
+    errorBtns[3].addEventListener('click',(e)=>{
+      console.dirxml(e)
+    })
+    errorBtns[4].addEventListener('click',(e)=>{
+      console.group('Console Group Start')
+    })
+    errorBtns[5].addEventListener('click',(e)=>{
+      console.groupEnd('Console Group End')
+    })
+    errorBtns[6].addEventListener('click',(e)=>{
+      console.table(["anthing1", "anthing2", "anthing3"]);
+    })
+    errorBtns[7].addEventListener('click',(e)=>{
+      console.time("Console Log Demo");
+    })
+    errorBtns[9].addEventListener('click',(e)=>{
+      console.trace("Console Log Demo");
+    })
+    errorBtns[10].addEventListener('click',(e)=>{
+      window.onerror = function (message, url, line, column, error) {
+        console.log('log---onerror::::',message, url, line, column, error);
+
+        TrackJS.track('Testing TrackJS!');
+      }
+    })
+
   </script>
 </body>
 </html>
